@@ -27,6 +27,7 @@ public class ResponseDto<T> {
         return new ResponseDto<>(200, "success", data, System.currentTimeMillis());
     }
 
+
     // 静态工厂方法：错误响应（默认参数）
     public static <T> ResponseDto<T> error(String message) {
         return new ResponseDto<>(400, message, null, System.currentTimeMillis());

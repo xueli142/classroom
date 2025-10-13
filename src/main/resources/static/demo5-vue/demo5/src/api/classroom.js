@@ -1,67 +1,38 @@
-import axios from 'axios'
+import http from './http'   // 你前面已经配好 token 拦截器、baseURL = '/api'
+
 // 获取分页数据
 export const getPage = (page = 0) =>
-    axios.get('http://localhost:9090/api/classroom/page', { params: { page } })
-        .then(res => res.data.data)   // 你的统一返回是 ResponseDto
+    http.get('/classroom/page', { params: { page } }).then(res => res.data.data)
 
-//增加教室
-export const createClassroom = (form) =>
-    axios.post('http://localhost:9090/api/classroom', form)
-        .then(res => res.data.data)
+// 增加教室
+export const createClassroom = form =>
+    http.post('/classroom', form).then(res => res.data.data)
 
-//删除教室
-export const deleteClassroom = (id) =>
-    axios.delete(`http://localhost:9090/api/classroom/${id}`)
-        .then(res => res.data.data)
-//修改教室
+// 删除教室
+export const deleteClassroom = id =>
+    http.delete(`/classroom/${id}`).then(res => res.data.data)
+
+// 修改教室
 export const updateClassroom = (id, form) =>
-    axios.put(`http://localhost:9090/api/classroom/${id}`, form)
-        .then(res => res.data.data)
+    http.put(`/classroom/${id}`, form).then(res => res.data.data)
 
+// 查询单个教室
+export const getClassroom = id =>
+    http.get(`/classroom/${id}`).then(res => res.data.data)
 
-//查询教室
-//export const getClassroom = (id) =>
- //   axios.get(`http://localhost:9090/api/classroom/${id}`)
-   //     .then(res => res.data.data)
-
-
-
-//增加教室图片
-export const createClassroomImage = (id, file) =>
-{
-    const formdata = new FormData();
-    formdata.append("image", file);
-    return   axios.post(
-        `http://localhost:9090/api/classroom/${id}/image`, formdata, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        }
-    )
-
+// 新增/修改教室图片（multipart）
+export const createClassroomImage = (id, file) => {
+    const fd = new FormData()
+    fd.append('image', file)
+    return http.post(`/classroom/${id}/image`, fd, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    })
 }
 
-//修改图片
-export const updateClassroomImage = (id, file) =>
-{
-    const formdata = new FormData();
-    formdata.append("image", file);
-    return   axios.put(
-        `http://localhost:9090/api/classroom/${id}/image`, formdata, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        }
-    )
-
+export const updateClassroomImage = (id, file) => {
+    const fd = new FormData()
+    fd.append('image', file)
+    return http.put(`/classroom/${id}/image`, fd, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    })
 }
-
-
-
-//预约
-
-
-
-
-
-//取消预约

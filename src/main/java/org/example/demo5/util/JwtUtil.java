@@ -44,7 +44,10 @@ public class JwtUtil {
 
     // 创建令牌的实际逻辑
     private String createToken(Map<String, Object> claims, String subject) {
-        return Jwts.builder()
+
+        System.out.println("这是claims " + claims);
+
+         String jwt = Jwts.builder()
                 //1.这里是JWT的header部分
                 .setClaims(claims) // 设置声明
                 .setSubject(subject) // 设置主题（通常是用户名）
@@ -54,6 +57,8 @@ public class JwtUtil {
                 //3.这里是签名部分，包含指定算法和密钥，防止被修改
                 .signWith(key, SignatureAlgorithm.HS256) // 使用密钥和算法签名
                 .compact(); // 压缩成 JWT 字符串
+        System.out.println("这是uid " + getUserIdFromToken(jwt));
+        return jwt;
     }
 
 
@@ -67,7 +72,7 @@ public class JwtUtil {
         //这里初始化了一个空的 claims Map。
         // 你可以在这里添加额外的声明，例如用户角色
         // claims.put("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
-
+        claims.put("uid", uid);
         claims.put("uuid", uuid); // 添加用户ID声明
         claims.put("name", name); // 添加姓名声明
         claims.put("role", role); // 添加角色声明
@@ -116,11 +121,15 @@ public class JwtUtil {
     // 从令牌中获取特定声明
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
     // 首先提取令牌中的所有声明
+
         final Claims claims = extractAllClaims(token);
+
     // 使用提供的函数式接口处理并返回特定的声明值
         return claimsResolver.apply(claims);
     }
-
+    public String uid(String token){
+        return  extractClaim(token, Claims::getSubject);
+    }
     // 获取其中的uid字段
     public String getUserIdFromToken(String token) {
         // 使用 extractClaim 方法，传入一个 Lambda 表达式
@@ -129,14 +138,14 @@ public class JwtUtil {
     }
 
 /**
- * 从令牌中提取UUID信息
+ * 从令牌中提取UID信息
  * @param token JWT令牌字符串
  * @return 提取出的UUID字符串
  */
     public String getUuidFromToken(String token) {
     // 使用extractClaim方法从令牌中提取特定声明
     // 这里提取的是名为"uuid"的声明，并将其转换为String类型返回
-        return extractClaim(token, claims -> claims.get("uuid", String.class));
+        return extractClaim(token, claims -> claims.get("uid", String.class));
     }
     /**
      * 从令牌中获取name字段的方法
@@ -160,7 +169,11 @@ public class JwtUtil {
 
     // 从令牌中获取所有声明
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder().
+                setSigningKey(key).
+                build().
+                parseClaimsJws(token).
+                getBody();
     }
 
     // 检查令牌是否过期

@@ -1,23 +1,21 @@
 package org.example.demo5.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import org.example.demo5.dto.ClassroomDto;
 import org.example.demo5.dto.ResponseDto;
+import org.example.demo5.dto.SelectClassroomDto;
 import org.example.demo5.mapper.Classroom.ClassroomImagesMapper;
 import org.example.demo5.mapper.Classroom.ClassroomMapper;
 import org.example.demo5.model.Classroom.Classroom;
-import org.example.demo5.model.Classroom.ClassroomImages;
 import org.example.demo5.service.Classroom.ClassroomService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "*")
+
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -89,5 +87,16 @@ public class ClassroomController {
         return ResponseDto.success(classroomService.saveImage(classroomId, file));
     }
 
+    /**
+     * 9. 通用条件查询（支持模糊）
+     * GET /api/classroom/search?name=计算&location=楼&nameLike=true&locationLike=true
+     */
+    @GetMapping("/classroom/search")
+    public ResponseDto<List<Classroom>> searchClassroom(SelectClassroomDto dto) {
+        // 如果前端没传 like 开关，默认 false（只精确匹配）
 
+
+        List<Classroom> list = classroomMapper.findList(dto);
+        return ResponseDto.success(list);
+    }
 }

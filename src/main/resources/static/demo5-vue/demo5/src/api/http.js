@@ -3,7 +3,7 @@ import { useAuthStore } from '@/stores/auth'
 import router from '@/router'
 
 const instance = axios.create({
-    baseURL: 'http://localhost:9090'   // 后端地址
+    baseURL: '/api'   // 后端地址
 })
 
 // 请求拦截：统一加 token

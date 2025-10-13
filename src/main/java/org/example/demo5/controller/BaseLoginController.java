@@ -9,7 +9,7 @@ import org.example.demo5.model.User.Teacher;
 import org.example.demo5.service.User.BaseService;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "*")
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor   // lombok 生成构造器，Spring 再按构造器注入

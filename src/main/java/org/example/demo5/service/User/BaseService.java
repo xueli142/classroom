@@ -1,6 +1,5 @@
 package org.example.demo5.service.User;
 
-
 import org.example.demo5.dto.LoginDto;
 import org.example.demo5.dto.LoginResponseDto;
 import org.example.demo5.mapper.User.RoleMapper;
@@ -13,13 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-public class BaseService<T extends BaseUser> {
+public abstract class BaseService<T extends BaseUser> {
 
-    private final BaseUserMapper<T> userMapper;
-    private final RoleMapper roleMapper;
-    private final PasswordUtil passwordUtil;
-    private final JwtUtil jwtUtil;
-    private final String roleTag;          // 用于 JWT 里标识身份
+    protected final BaseUserMapper<T> userMapper;
+    protected final RoleMapper roleMapper;
+    protected final PasswordUtil passwordUtil;
+    protected final JwtUtil jwtUtil;
+    protected final String roleTag;          // STUDENT / TEACHER / ADMIN
 
     public BaseService(BaseUserMapper<T> userMapper,
                        RoleMapper roleMapper,
@@ -33,30 +32,28 @@ public class BaseService<T extends BaseUser> {
         this.roleTag = roleTag;
     }
 
-    /* --------------- 注册（含重复检查）--------------- */
+    /* --------------- 通用注册 --------------- */
     @Transactional
     public boolean register(T user) {
         user.setUuid(IdGeneratorUtil.generateUuid());
         user.setPassword(passwordUtil.encode(user.getPassword()));
         user.setCreatedTime(LocalDateTime.now());
         user.setUpdatedTime(LocalDateTime.now());
-        user.setRole(this.roleTag);
+        user.setRole(roleTag);
 
         if (!userMapper.insertCheck(user)) return false;
-        //userMapper.insert(user);
         return roleMapper.insertBiz(user.getUid(), user.getUuid(), user.roleName());
-
     }
 
-    /* --------------- 登录 --------------- */
+    /* --------------- 通用登录 --------------- */
     public LoginResponseDto login(LoginDto dto) {
         T user = userMapper.selectByUid(dto.getUid());
         if (user == null ||
                 !passwordUtil.matches(dto.getPassword(), user.getPassword())) {
-            return new LoginResponseDto(null,"登录失败");                       // 或抛业务异常
+            return new LoginResponseDto(null, "登录失败");
         }
-        String jwt = jwtUtil.generateToken(
-                user.getUid(), user.getName(), user.getUuid(), roleTag);
+        String jwt = jwtUtil.generateToken(user.getUid(), user.getName(),
+                user.getUuid(), roleTag);
         return new LoginResponseDto(jwt, "登录成功");
     }
 }

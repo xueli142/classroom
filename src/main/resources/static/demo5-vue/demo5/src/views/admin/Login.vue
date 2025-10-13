@@ -2,7 +2,7 @@
   <div style="width:300px;margin:80px auto;">
     <h3>管理员登录</h3>
     <form @submit.prevent="handle">
-      <input v-model="form.username" placeholder="用户名" /><br/>
+      <input v-model="form.uid" placeholder="用户名" /><br/>
       <input v-model="form.password" type="password" placeholder="密码" /><br/>
       <button type="submit">登录</button>
     </form>
@@ -22,7 +22,7 @@ import { reactive } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 
-const form = reactive({ username: '', password: '' })
+const form = reactive({ uid: '', password: '' })
 const store = useAuthStore()
 const router = useRouter()
 

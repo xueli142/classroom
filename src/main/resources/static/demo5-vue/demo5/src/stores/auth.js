@@ -1,6 +1,6 @@
 // src/stores/auth.js
 import { defineStore } from 'pinia'
-import http from '@/api/http'
+import { authHttp } from '@/api/auth'
 
 // 工具：安全解析
 function safeJson(key, def = null) {
@@ -26,40 +26,37 @@ export const useAuthStore = defineStore('auth', {
 
     actions: {
         async login(role, form) {
-            const { data } = await http.post(`/auth/login/${role}`, form)
+            // 现在走的 url = http://localhost:9090/auth/login/teacher
+            const {data} = await authHttp.post(`/auth/login/${role}`, form)
             this.token = data.token
-            this.user  = data.user
-            this.role  = role
-
+            this.user = data.user
+            this.role = role
             localStorage.setItem('token', data.token)
-            localStorage.setItem('user',  JSON.stringify(data.user))
-            localStorage.setItem('role',  role)
+            localStorage.setItem('user', JSON.stringify(data.user))
+            localStorage.setItem('role', role)
         },
+
+
+
 
         logout() {
             this.token = ''
-            this.user  = null
-            this.role  = ''
+            this.user = null
+            this.role = ''
             localStorage.removeItem('token')
             localStorage.removeItem('user')
             localStorage.removeItem('role')
             location.replace(`/${this.role || 'student'}/login`)
         },
         async register(role, form) {
-            // 1. 提交注册
-            const { data } = await http.post(`/auth/register/${role}`, form)
-
-
-
-            this.user  = data.user
-            this.role  = role
-
+            const {data} = await authHttp.post(`/auth/register/${role}`, form)
+            this.token = data.token
+            this.user = data.user
+            this.role = role
             localStorage.setItem('token', data.token)
-            localStorage.setItem('user',  JSON.stringify(data.user))
-            localStorage.setItem('role',  role)
-
-            // 3. 跳到该角色首页（或登录页，按你业务来）
+            localStorage.setItem('user', JSON.stringify(data.user))
+            localStorage.setItem('role', role)
             location.replace(`/${role}/dashboard`)
-        }
+        },
     }
 })

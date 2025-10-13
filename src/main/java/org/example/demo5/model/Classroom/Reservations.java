@@ -11,8 +11,6 @@ public class Reservations {
 
   private long id;
   private String classroomId;
-
-
   private String purpose;
   private java.sql.Timestamp endTime;
   private java.sql.Timestamp startTime;

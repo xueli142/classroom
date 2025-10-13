@@ -16,4 +16,13 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  server: {
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:9090', // ← 后端实际端口
+        changeOrigin: true,              // ← 必加
+        rewrite: path => path            // 保持原路径，不需要去掉 /api
+      }
+    }}
 })
