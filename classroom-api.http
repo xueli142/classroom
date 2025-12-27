@@ -1,0 +1,92 @@
+### 0. 通用变量
+@baseUrl = http://localhost:8080
+@boundary = ----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+### 1. 插入教室
+# @name classroomInsert
+POST {{baseUrl}}/api/classroom/insert
+Content-Type: multipart/form-data; boundary={{boundary}}
+
+--{{boundary}}
+Content-Disposition: form-data; name="dto"
+{"name":"TEST-ROOM","location":"L-999","capacity":30}
+--{{boundary}}
+Content-Disposition: form-data; name="file"; filename="B87D15757DBDADD92AFEDC58D8E63371.gif"
+Content-Type: image/png
+
+< B87D15757DBDADD92AFEDC58D8E63371.gif
+--{{boundary}}--
+> {%
+  client.test("insert ok", () => {
+    expect(response.statusCode).toBe(200);
+    expect(response.body.data).toBe(true);
+  });
+%}
+### 2. 分页
+POST {{baseUrl}}/api/classroom/page
+Content-Type: application/json
+
+{"page":1,"size":5}
+> {%
+    client.test("page >0", () => {
+        expect(response.body.data.records.length).toBeGreaterThan(0);
+        client.global.set("roomId", response.body.data.records[0].classroomId);
+    });
+%}
+
+### 3. 更新（换图）
+POST {{baseUrl}}/api/classroom/update  Content-Type: multipart/form-data; boundary={{boundary}}
+--{{boundary}}
+Content-Disposition: form-data; name="dto"
+{"classroomId":"{{roomId}}","name":"UPDATED"}
+--{{boundary}}
+Content-Disposition: form-data; name="file"; filename="2x2.png"
+Content-Type: image/png
+iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQYlWNgYGD4z4AE/mcA8gQALHwjB3Z9K5AAAAAASUVORK5CYII=
+--{{boundary}}
+--{{boundary}}
+Content-Disposition: form-data; name="oldName"
+1x1.png
+--{{boundary}}--
+> {%
+  client.test("update ok", () => {
+    expect(response.body.data).toBe(true);
+  });
+%}
+
+### 4. 删除
+DELETE {{baseUrl}}/api/classroom/{{roomId}}
+> {%
+  client.test("delete ok", () => {
+    expect(response.body.data).toBe(true);
+  });
+%}
+
+### 5. 课程 CRUD（同理，直接复制上面 4 步，把 url 换成 /api/course 即可）
+
+### 6. 课程时段：批量插入
+POST {{baseUrl}}/api/course-slot/insertBatch  Content-Type: multipart/form-data; boundary={{boundary}}
+--{{boundary}}
+Content-Disposition: form-data; name="dtoList"
+[{"courseId":"C-001","teacherId":"T-001","classroomId":"R-001","week_monday":"2025-11-17","day_of_week":1,"slot":0}]
+--{{boundary}}
+Content-Disposition: form-data; name="file"; filename="slot.png"
+Content-Type: image/png
+iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==
+--{{boundary}}--
+> {%
+  client.test("batch insert ok", () => {
+    expect(response.body.data).toBe(true);
+  });
+%}
+
+### 7. 课表 7×12
+POST {{baseUrl}}/api/course-slot/weekTable
+Content-Type: application/json
+
+{"week_monday":"2025-11-17"}
+> {%
+    client.test("weekTable 84 cell", () => {
+        expect(response.body.data.length).toBe(84);
+    });
+%}
