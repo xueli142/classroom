@@ -199,7 +199,6 @@ public class StudentService {
             vo.setGroups(s.getGroups());
         }
         return vo;
-
     }
 
 

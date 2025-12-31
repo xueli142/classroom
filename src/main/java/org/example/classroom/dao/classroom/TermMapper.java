@@ -13,7 +13,7 @@ public interface TermMapper extends BaseMapper<Term> {
 
 
     @Update("UPDATE term SET week_now = #{weekNow} WHERE is_active = 1")
-    int updateActiveTermWeekNow(@Param("weekNow") int weekNow);
+    void updateActiveTermWeekNow(@Param("weekNow") int weekNow);
 
 
     default Boolean deleteByTermId (String TermId){
