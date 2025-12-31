@@ -295,4 +295,8 @@ public class CourseSlotServiceImpl
 
         return new ArrayList<>(map.values());
     }
+    public void  test(){
+
+        System.out.println("Hello World!");
+    }
 }

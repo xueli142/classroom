@@ -28,4 +28,6 @@ public interface TermMapper extends BaseMapper<Term> {
 
     @Select("SELECT * FROM term WHERE is_active = 1 LIMIT 1")
     Term getActiveTerm();
+
+
 }
