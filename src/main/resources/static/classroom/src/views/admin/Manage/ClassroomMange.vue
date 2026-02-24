@@ -228,7 +228,7 @@ const store = useClassroomStore()
 /* 表格 & 分页 */
 const tableData   = ref([])
 const selectedIds = ref([])
-const pagination  = reactive({ page: 1, size: 10, total: 0 })
+const pagination  = reactive({ current: 1, size: 10, total: 0 })
 const classroomUse=ref(false)
 function handleSelectionChange(rows) {
   selectedIds.value = rows.map(r => r.classroomId)
@@ -236,7 +236,7 @@ function handleSelectionChange(rows) {
 async function loadPage() {
   try {
     await store.classroomIPage({
-      page: pagination.page,
+      page: pagination.current,
       size:    pagination.size,
       ...searchForm
     })
@@ -380,13 +380,6 @@ function openEdit(row) {
     }
   })
   drawerVisible.value = true
-  function resetForm() {
-}
-  formRef.value?.resetFields()
-  Object.keys(formModel).forEach(k => (formModel[k] = k === 'isActive' ? true : ''))
-  formModel.classroomId = undefined
-  fileList.value = []
-  rawFile = null
 }
 function handleDrawerClose() {
   drawerVisible.value = false

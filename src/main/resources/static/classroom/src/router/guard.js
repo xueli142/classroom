@@ -41,7 +41,7 @@ export function setupGuard(router) {
         /* ---------- 角色分流 ---------- */
         const role = getRole();
         // 第一次进系统（或手动输 /Dashboard）时按角色跳转
-        if (to.path === '/' || to.path === '/Dashboard' || to.path.startsWith('/Dashboard')) {
+        if (to.path === '/' || to.path === '/Dashboard') {
             const target = ROLE_HOME[role];
             if (target) {
                 next(target);   // 跳到各自 Dashboard

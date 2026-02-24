@@ -63,7 +63,7 @@ const router = createRouter({
         { path: 'notice',     name: 'StudentNotice',   component: () => import('@/views/student/StudentNotice.vue') },
         {path:'setting',      name: 'StudentSetting',component:()=>import('@/views/student/StudentSysSetting.vue')},
         {path:'courseBooking', name:'StudentCourseBooking',component:()=>import('@/views/student/StudentCourseBooking.vue') },
-        {path:'activityBooking',name:'ActivityBooking',component:()=>import('@/views/student/StudentActivityBooking.vue')},
+        {path:'activityBooking',name:'StudentActivityBooking',component:()=>import('@/views/student/StudentActivityBooking.vue')},
         {path:'booking',name:'StudentThingBooking',component:()=>import('@/views/student/StudentThingBooking.vue')}
 
 

@@ -48,9 +48,8 @@
           </el-sub-menu >
           <el-sub-menu index="4">
             <template #title>
-              <el-icon></el-icon>
+              <el-icon><Calendar /></el-icon>
               <span>预约管理</span>
-
             </template>
 
             <el-menu-item index="studentBooking" >学生预约</el-menu-item>
@@ -60,7 +59,7 @@
           </el-sub-menu>
           <el-sub-menu index="5">
             <template #title>
-              <el-icon></el-icon>
+              <el-icon><Tickets /></el-icon>
               <span>课程表管理</span>
             </template>
             <el-menu-item index="stuSchedule">学生课程表</el-menu-item>
@@ -98,7 +97,7 @@
 import { ref, computed } from 'vue'
 import { useAuthStore } from '@/stores/AuthStore.js'
 import {
-  User, OfficeBuilding, Avatar, Bell, Setting
+  User, OfficeBuilding, Avatar, Bell, Setting, Calendar, Tickets
 } from '@element-plus/icons-vue'
 import TeacherManage from '@/views/admin/Manage/TeacherMange.vue'
 import StudentManage from '@/views/admin/Manage/StudentMange.vue'

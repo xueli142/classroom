@@ -20,7 +20,6 @@ export const useEventStore = defineStore('event', () => {
         try {
             const res = await EventApi.eventIPage(payload);
             const { records, total: count } = res.data.data;
-            console.log(res.data.data);
             eventList.value  = records;
             eventTotal.value = count;
         } catch (e) {

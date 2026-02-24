@@ -23,7 +23,6 @@ export const useStudentCourseStore = defineStore('studentCourse', () => {
         try {
             const res = await StudentCourseApi.studentCourseIPage(payload);
             const { records, total: count } = res.data.data;
-            console.log(res.data.data)
             studentCourseList.value  = records;
             studentCourseTotal.value = count;
         } catch (e) {

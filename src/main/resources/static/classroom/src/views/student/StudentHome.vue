@@ -160,8 +160,8 @@ async function handleUploadAvatar(e) {
   try {
     const hadImg = auth.user?.image_url && auth.user.image_url !== defaultAvatar
     const api = hadImg
-        ? () => auth.changeImage(file, auth.user.image_url) // 修改
-        : () => auth.insertImage(file)                     // 新增
+        ? () => auth.changeAvatar(file, auth.user.image_url) // 修改
+        : () => auth.uploadAvatar(file)                       // 新增
     auth.user.image_url = await api()
     ElMessage.success('头像已更新')
   } catch (err) {

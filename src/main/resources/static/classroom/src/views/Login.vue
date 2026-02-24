@@ -52,15 +52,6 @@
         </el-form-item>
       </el-form>
 
-      <!-- 错误提示 -->
-      <el-alert
-          v-if="error"
-          :title="error"
-          type="error"
-          :closable="false"
-          center
-          class="error-alert"
-      />
     </el-card>
   </div>
 </template>
@@ -69,18 +60,11 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/AuthStore'
-import { ElNotification } from 'element-plus'
 import { User, Lock, Promotion } from '@element-plus/icons-vue'
 
 /* ---------------- 路由 & 仓库 ---------------- */
 const router = useRouter()
 const store = useAuthStore()
-
-const ROLE_HOME = {
-  ADMIN: '/adminDashboard',
-  TEACHER: '/teacherDashboard',
-  STUDENT: '/studentDashboard'
-}
 
 /* ---------------- 表单数据 ---------------- */
 const formRef = ref()
@@ -90,7 +74,6 @@ const rules = {
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
 }
 const loading = ref(false)
-const error = ref('')
 
 /* ---------------- 提交 ---------------- */
 const onSubmit = async () => {
@@ -98,24 +81,13 @@ const onSubmit = async () => {
   if (!valid) return
 
   loading.value = true
-  error.value = ''
-
   try {
-    const { user } = await store.login({
+    await store.login({
       uid: form.uid.trim(),
       password: form.password
     })
-
-    ElNotification({
-      title: '成功',
-      message: `欢迎回来，${user.name || user.uid}`,
-      type: 'success',
-      duration: 1500
-    })
-
-    await router.replace(ROLE_HOME[user.role])
-  } catch (e) {
-    error.value = e?.response?.data?.message || e.message || '登录失败，请检查账号密码'
+    // 登录成功消息已在 API 层处理
+    await router.replace(store.userHomePath)
   } finally {
     loading.value = false
   }
@@ -203,8 +175,4 @@ const onSubmit = async () => {
   cursor: not-allowed;
 }
 
-/* ---------- 错误提示 ---------- */
-.error-alert {
-  margin-top: 12px;
-}
 </style>
